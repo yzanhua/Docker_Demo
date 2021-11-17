@@ -1,9 +1,11 @@
+# Not Finished
+
 ## General
 [create_image](create_image) contains all the necessary files to setup a docker image
 that one can use to run MPI c/python programs on the ECP machine.
 
 ---
-### Build the Image
+## Build the Image
 I have built the image and is avaliable at "yzanhua/ecp-mpi" from Docker Hub. You can also build one using command:
 ```shell
 # Assume the image name you want to build is "my_local_image", version is "latest"
@@ -12,7 +14,7 @@ docker build -t my_local_image:latest path/to/create_image
 
 ---
 
-### How to use the image:
+## How to use the image:
 1. run a container from the image.
     ```shell
     # if you built your own image
@@ -34,8 +36,9 @@ docker build -t my_local_image:latest path/to/create_image
     cd /mpich-demo/py
     mpiexec -n 2 python3 send_rec.py # use python3 instead of python.
     ```
+---
 
-### Push your image to the Registry (Docker Hub)
+## Push your image to the Registry (Docker Hub)
 
 0. [Official Tutorial](https://docs.docker.com/docker-hub/repos/)
 1. Create an account at [Docker Hub](https://hub.docker.com/)
