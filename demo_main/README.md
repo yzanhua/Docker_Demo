@@ -1,7 +1,7 @@
 ## Experiment 1:
 **Goal:** pull an image from Registry, create some containers. Create files inside the containers.
 
-```
+```shell
 # To list all local images
 % docker image ls
 REPOSITORY  TAG         IMAGE ID    CREATED     SIZE
@@ -61,21 +61,27 @@ ls: cannot access 'test_file_111111111': No such file or directory
 5. To remove an image, run command `docker image rm IMAGE_NAME`
 
 ## Experiment 1.1
-Continue From Experiment 1. **Goal:** demo isolation
+**Goal:** demo isolation
+Continue from Experiment 1 above.
 ```shell
-# list all running containers
+# List available images
+% docker image ls
+REPOSITORY                TAG         IMAGE ID      CREATED      SIZE
+docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago  75.2 MB
+
+# List all running containers
 % docker container ls
 CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
 
-# list all containers
+# List all containers
 % docker container ls -a
-CONTAINER ID  IMAGE                            COMMAND     CREATED         STATUS                     PORTS       NAMES
-b0ca08f117b4  docker.io/library/ubuntu:latest  /bin/bash   13 minutes ago  Exited (0) 12 minutes ago              dreamy_sutherland
+CONTAINER ID  IMAGE                            COMMAND     CREATED         STATUS                    PORTS       NAMES
+4a243d8ef5c8  docker.io/library/ubuntu:latest  /bin/bash   11 minutes ago  Exited (0) 9 minutes ago              happy_goldstine
 
-# restart stopped container
-# docker start -ia [container-id]
-% docker start -ia b0ca08f117b4
-root@b0ca08f117b4:/#
+# Restart stopped container
+# Command: docker start -ia [container-id]
+% docker start -ia 4a243d8ef5c8
+root@4a243d8ef5c8:/#
 
 # Now we are inside container
 # Check the file 'test_file_111111111' previously created 
@@ -92,15 +98,28 @@ docker run -it ubuntu /bin/bash
 
 # Now, we are inside the container
 # File 'test_file_111111111' should not be in this container
-ls 
+root@c61901ef21bc:/# ls 
+bin   dev  home  lib32  libx32  mnt  proc  run   srv  tmp  var
+boot  etc  lib   lib64  media   opt  root  sbin  sys  usr
+
+# Leave the container
+root@b0ca08f117b4:/# exit
 exit
 
-# # docker ps <==> docker container ls
-# # docker ps -a <==> docker container ls -a
-docker ps -a 
+# Command 'docker ps is the same as 'docker container ls'
+# Command 'docker ps -a' is the same as 'docker container ls -a'
+% docker ps -a 
+CONTAINER ID  IMAGE                            COMMAND     CREATED             STATUS                         PORTS       NAMES
+4a243d8ef5c8  docker.io/library/ubuntu:latest  /bin/bash   14 minutes ago      Exited (0) About a minute ago              happy_goldstine
+c61901ef21bc  docker.io/library/ubuntu:latest  /bin/bash   About a minute ago  Exited (127) 8 seconds ago                 nostalgic_almeida
 
-# # rm container
-docker container rm [container-id]
+# Delete a container
+# Command: docker container rm [container-id]
+% docker container rm  c61901ef21bc
+c61901ef21bc28a3d4559a01e64c605288c51e8c7c1b168f20ed725407bde98f
+ecp/1::Docker(3:46pm) #1140 docker container ls -a
+CONTAINER ID  IMAGE                            COMMAND     CREATED         STATUS                    PORTS       NAMES
+4a243d8ef5c8  docker.io/library/ubuntu:latest  /bin/bash   17 minutes ago  Exited (0) 4 minutes ago              happy_goldstine
 ```
 
 ## Experiment 2
