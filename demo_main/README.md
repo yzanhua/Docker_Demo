@@ -1,5 +1,5 @@
 ## Experiment 1:
-**Goal:** pull an image from Registry, create some containers. Create files inside the containers.
+**Goal:** pull an image from Registry, create some containers, create files inside the container.
 
 ```shell
 # To list all local images
@@ -52,7 +52,7 @@ ls: cannot access 'test_file_111111111': No such file or directory
 
 # Note file 'test_file_111111111' only exists inside of the docker image you created, 'ubuntu'.
 ```
-### Further explanation:
+### Command explanation:
 1. The `docker run` command creates a new container, using image `ubuntu` (default tag: latest).
 1. If you don't have this image (ubuntu in this example) locally, Docker will pull one from Registry.
 3. Docker then starts the container and executes `/bin/bash` as given by the user. 
@@ -61,8 +61,7 @@ ls: cannot access 'test_file_111111111': No such file or directory
 5. To remove an image, run command `docker image rm IMAGE_NAME`
 
 ## Experiment 1.1
-**Goal:** demo isolation
-Continue from Experiment 1 above.
+**Goal:** demo container isolation, continuing from Experiment 1 above.
 ```shell
 # List available images
 % docker image ls
@@ -123,27 +122,71 @@ CONTAINER ID  IMAGE                            COMMAND     CREATED         STATU
 ```
 
 ## Experiment 2
-
-Goal: run print_list.py inside container:
+**Goal**: run a small python program 'print_list.py' inside a container.
 
 ```shell
-# # see explaination below
-docker run -it --rm -v $(pwd):/workspace -w /workspace  python:3.9 /bin/bash
+# Create a folder on the host machine
+% mkdir work_folder_on_host
+% ls
+work_folder_on_host
+
+# Copy the test python program over.
+% cp Docker_Demo/demo_main/print_list.py ./work_folder_on_host
+
+# Create a new container, mount the work folder on the host machine at the root folder. 
+% docker run -it --rm -v ${PWD}/work_folder_on_host:/work_folder_in_container -w /work_folder_in_container python:3.9 /bin/bash
+Resolved "python" as an alias (/etc/containers/registries.conf.d/000-shortnames.conf)
+Trying to pull docker.io/library/python:3.9...
+Getting image source signatures
+Copying blob e1ad2231829e done  
+Copying blob a66b7f31b095 done  
+Copying blob 647acf3d48c2 done  
+Copying blob b02967ef0034 done  
+Copying blob 05189b5b2762 done  
+Copying blob 5576ce26bf1d done  
+Copying blob 6152fd3f0c9a done  
+Copying blob 7f52f09bfb2e done  
+Copying blob ccac69d544ed done  
+Copying config e9a56b8597 done  
+Writing manifest to image destination
+Storing signatures
+root@f4cdd8b95e02:/work_folder_in_container#
+
+# Check what is the current folder
+root@f4cdd8b95e02:/work_folder_in_container# pwd
+/work_folder_in_container
 
 # # inside container:
-ls
+root@00302efc24aa:/work_folder_in_container# ls
 python print_list.py
-python print_list.py > out.txt
-ls
+
+# Run python program
+root@00302efc24aa:/work_folder_in_container# python print_list.py > out.txt
+
+# Check if the output is created
+root@00302efc24aa:/work_folder_in_container# ls
+out.txt  print_list.py
+
+# exit the container
+root@00302efc24aa:/work_folder_in_container# exit
 exit
 
-# # now at host machine
-ls
-docker ps -a
+# Check if the output file appears on the host machine
+% cd work_folder_on_host/
+% ls
+out.txt  print_list.py
+% cat out.txt 
+[1, 2, 3, 4]
+
+# now at host machine
+% docker ps -a
+CONTAINER ID  IMAGE                            COMMAND     CREATED      STATUS                    PORTS       NAMES
+4a243d8ef5c8  docker.io/library/ubuntu:latest  /bin/bash   2 hours ago  Exited (2) 4 minutes ago              happy_goldstine
 ```
-1. `--rm`: the container will be auto-removed.
+### Command-line option explanation:
+1. `--rm`: the container will be auto-removed once exits from it.
 2. `-v [host_folder]:[container_folder]`: mounts a folder `[host_folder]` from host machine to `[container_folder]` inside the container.
-3.  `-w [container_folder]`: the initial working directory becomes `[container_folder]`.
+3.  `-w [container_folder]`: the starting working directory once entering the container.
 
 ## Experiment 3
 
