@@ -6,9 +6,9 @@ This demo shows how to set up an image on the ECP machine so that you can run MP
 
 ---
 ## 2. Setting Up the Image
-You can choose to build such image from scratch, or download a pre-built image from `yzanhua/ecp-mpi`.
+You can choose to build such image from scratch, or download a pre-built image from `yzanhua/ecp-mpi`. The pre-built image is only tested on the ECP machine. 
 ### 2.1 Build the image from scratch:
-The folder [Docker_Demo/demo_mpi_ecp/create_image](create_image) contains all the necessary files to build the image. However, it may take a long time to finish.
+The folder [Docker_Demo/demo_mpi_ecp/create_image](create_image) contains all the necessary files to build the image. It may take a long time to finish building this image.
 ```shell
 # Assume the image name you want to build is "my_local_image", version is "latest"
 % docker build -t my_local_image:latest path/to/create_image
