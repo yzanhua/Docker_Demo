@@ -70,14 +70,9 @@ You can find an already-built image from `yzanhua/ecp-mpi`. Inside the image, Py
 2. Create a repository on your Docker Hub. Free account only has one free private repo.
 2. Login the docker account from your local/host machine:
     ```shell
-    # if using podman (alias docker=podman)
     % docker login docker.io
     # enter username
     # enter password
-
-    # if using docker
-    % docker login -u [account user name]
-    # enter your password
     ```
 3. Push the image you built to the Docker Hub:
     ```shell
