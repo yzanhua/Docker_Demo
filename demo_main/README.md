@@ -7,7 +7,7 @@
 REPOSITORY  TAG         IMAGE ID    CREATED     SIZE
 
 # Add an image of ubuntu by pulling 'ubuntu' image from Registry
-# Command: docker pull [iamge name]:[version/tag]
+# Command: docker pull [image name]:[version/tag]
 #     [version/tag] defaults to "latest", 
 #     Command below is the same as "docker pull ubuntu:latest"
 % docker pull ubuntu
@@ -26,7 +26,7 @@ REPOSITORY                TAG         IMAGE ID      CREATED      SIZE
 docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago  75.2 MB
 
 # Enter docker in the interactive mode to run some commands for testing
-# docker run [options] [image name]:[version] [commmand]
+# docker run [options] [image name]:[version] [command]
 # '-i': interactive mode, '-t': Allocate a pseudo-TTY
 % docker run -it ubuntu /bin/bash
 root@4a243d8ef5c8:/# 
@@ -189,11 +189,11 @@ CONTAINER ID  IMAGE                            COMMAND     CREATED      STATUS  
 3.  `-w [container_folder]`: the starting working directory once entering the container.
 
 ## Experiment 3
-**Goal1**: run print_list.py in batch mode (i.e. without command-line options `-it`,
+**Goal**: run print_list.py in batch mode (i.e. without command-line options `-it`,
 preventing from entering the container in interactive mode)
 
 ```shell
-# docker run [options] [image name]:[version] [commmand]
+# docker run [options] [image name]:[version] [command]
 % docker run --rm \
          -v ${PWD}/work_folder_on_host:/work_folder_in_container \
          -w /work_folder_in_container \
@@ -206,38 +206,125 @@ out2.txt  work_folder_on_host
 ```
 
 ## Experiment 4
-Goal1: run print_list.py inside container:
-Goal2: Save a container as an image
+**Goal**: Save a container as an image
 ```shell
-# # no --rm
-docker run -it -v $(pwd):/workspace -w /workspace ubuntu /bin/bash
+# Create a container, but do not delete it once exit it
+# Do not use command-line option "--rm"
+% docker run -it -v ${PWD}/work_folder_on_host:/work_folder_in_container -w /work_folder_in_container ubuntu /bin/bash 
+Resolved "ubuntu" as an alias (/etc/containers/registries.conf.d/000-shortnames.conf)
+Trying to pull docker.io/library/ubuntu:latest...
+Getting image source signatures
+Copying blob 7b1a6ab2e44d done  
+Copying config ba6acccedd done  
+Writing manifest to image destination
+Storing signatures
 
-# # now inside ubuntu container
-python # # bash: python: command not found, need to install python
-apt-get update # # already root, no need to do "sudo apt--get install"
-apt-get install python3
-python3 print_list.py
+# Now inside ubuntu container
+# Check if python is available. It should not.
+root@1af821d3f7e7:/work_folder_in_container# python
+bash: python: command not found
+
+# Update Ubuntu packages
+root@1af821d3f7e7:/work_folder_in_container# apt-get update
+Get:1 http://archive.ubuntu.com/ubuntu focal InRelease [265 kB]
+Get:2 http://security.ubuntu.com/ubuntu focal-security InRelease [114 kB]
+...
+Fetched 19.7 MB in 2s (8962 kB/s)                           
+Reading package lists... Done
+
+# Install python package
+root@1af821d3f7e7:/work_folder_in_container# apt-get install python3 
+Reading package lists... Done
+Building dependency tree       
+...
+Do you want to continue? [Y/n] Y
+...
+Processing triggers for libc-bin (2.31-0ubuntu9.2) ...
+
+# Run example python program
+root@1af821d3f7e7:/work_folder_in_container# python3 print_list.py
+[1, 2, 3, 4]
+
+# leave the container
+root@1af821d3f7e7:/work_folder_in_container# exit
 exit
 
-# # now host machine:
-docker ps -a
-# # create image from container # docker commit [container-id] [image:version/tag]
-docker commit [container-id] my_image:latest
-docker container rm [container-id] # this step is not necessary
-docker image ls
-# # image size much smaller than python:3.9
-# # python:3.9-slim the minimal package to run python 3.9
-docker pull pyhton:3.9-slim
+# now on host machine:
+% docker ps -a
+CONTAINER ID  IMAGE                            COMMAND     CREATED             STATUS                    PORTS       NAMES
+1af821d3f7e7  docker.io/library/ubuntu:latest  /bin/bash   About a minute ago  Exited (0) 8 seconds ago              laughing_swartz
 
-docker run -it --rm -v $(pwd):/workspace  my_image /bin/bash 
+# create image from container
+# Command: docker commit [container-id] [image:version/tag]
+% docker commit 1af821d3f7e7 my_image:latest
+Getting image source signatures
+Copying blob 9f54eef41275 skipped: already exists  
+Copying blob b5810b1b0929 done  
+Copying config ebb2a6ed1d done  
+Writing manifest to image destination
+Storing signatures
+ebb2a6ed1d45365dcccdbf5c4b0e2f4b4fdcf2efb51d0558bd781ed93a98ce68
 
-# # now inside container: /workspace
-python3 print_list.py
+% docker image ls -a
+REPOSITORY                TAG         IMAGE ID      CREATED         SIZE
+localhost/my_image        latest      ebb2a6ed1d45  22 seconds ago  147 MB
+docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago     75.2 MB
+
+% docker container ls -a
+CONTAINER ID  IMAGE                            COMMAND     CREATED        STATUS                    PORTS       NAMES
+1af821d3f7e7  docker.io/library/ubuntu:latest  /bin/bash   6 minutes ago  Exited (0) 5 minutes ago              laughing_swartz
+
+# Now an image is created. We can delete the container if it is no longer used.
+# This step is optional.
+% docker container rm 1af821d3f7e7
+
+# Note the image size of my_image is 147 MB
+# python:3.9-slim the minimal package to run python 3.9
+% docker pull python:3.9-slim
+Resolved "python" as an alias (/etc/containers/registries.conf.d/000-shortnames.conf)
+Trying to pull docker.io/library/python:3.9-slim...
+Getting image source signatures
+Copying blob ba03a8977ca9 done  
+...
+Writing manifest to image destination
+Storing signatures
+3ba8c1c68e98756449f6bba3ee34dc7343fea0dc399baaa51c663d34e1682146
+
+% docker image ls -a
+REPOSITORY                TAG         IMAGE ID      CREATED         SIZE
+localhost/my_image        latest      ebb2a6ed1d45  19 minutes ago  147 MB
+docker.io/library/python  3.9-slim    3ba8c1c68e98  26 hours ago    128 MB
+docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago     75.2 MB
+
+# Now try the slim version
+% docker run -it -v ${PWD}/work_folder_on_host:/work_folder_in_container -w /work_folder_in_container python /bin/bash 
+
+# Now we are inside of container that installs python:3.9-slim
+# Run the example python program
+root@3dbe50733485:/work_folder_in_container# python3 print_list.py
+[1, 2, 3, 4]
+
+# Leave the container
+root@3dbe50733485:/work_folder_in_container# exit
 exit
 
-# # now host machine
-docker image rm my_image
-docker iamge ls
+# now on host machine
+% docker image ls -a
+REPOSITORY                TAG         IMAGE ID      CREATED         SIZE
+localhost/my_image        latest      ebb2a6ed1d45  22 minutes ago  147 MB
+docker.io/library/python  3.9-slim    3ba8c1c68e98  26 hours ago    128 MB
+docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago     75.2 MB
+
+# We can delete the newly created toy image
+% docker image rm my_image
+Untagged: localhost/my_image:latest
+Deleted: ebb2a6ed1d45365dcccdbf5c4b0e2f4b4fdcf2efb51d0558bd781ed93a98ce68
+
+# Check if the image has been deleted.
+% docker image ls -a
+REPOSITORY                TAG         IMAGE ID      CREATED       SIZE
+docker.io/library/python  3.9-slim    3ba8c1c68e98  26 hours ago  128 MB
+docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago   75.2 MB
 ```
 
 ## Experiment 5
@@ -247,7 +334,7 @@ Goal2: Create images from Dockerfile
 
 ```shell
 # # build an image from Dockerfile
-# # docker build -t [iamge name][version/tag] [folder containing Dockerfile]
+# # docker build -t [image name][version/tag] [folder containing Dockerfile]
 docker build -t my_image2:2.4.4 ../demo_dockerfile/demo1
 
 # # build another image from Dockerfile (using a different way)
@@ -257,6 +344,3 @@ docker image ls
 docker run -it --rm -v $(pwd):/workspace -w /workspace my_image2:2.4.4 python3 print_list.py
 docker run -it --rm -v $(pwd):/workspace -w /workspace my_image2 python3 print_list.py
 ```
-
-
- 
