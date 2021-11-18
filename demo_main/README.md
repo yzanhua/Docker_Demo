@@ -328,19 +328,87 @@ docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago   75.2 MB
 ```
 
 ## Experiment 5
-Goal1: run print_list.py inside container
-
-Goal2: Create images from Dockerfile
+*Goal**: Create an image from Dockerfile
 
 ```shell
-# # build an image from Dockerfile
-# # docker build -t [image name][version/tag] [folder containing Dockerfile]
-docker build -t my_image2:2.4.4 ../demo_dockerfile/demo1
+# An example Dockerfile is available in folder 'demo_dockerfile/demo1'
 
-# # build another image from Dockerfile (using a different way)
-docker build -t my_image2 ../demo_dockerfile/demo2 
-docker image ls
+% docker image ls -a
+REPOSITORY                TAG         IMAGE ID      CREATED       SIZE
+docker.io/library/python  3.9-slim    3ba8c1c68e98  26 hours ago  128 MB
+docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago   75.2 MB
 
-docker run -it --rm -v $(pwd):/workspace -w /workspace my_image2:2.4.4 python3 print_list.py
-docker run -it --rm -v $(pwd):/workspace -w /workspace my_image2 python3 print_list.py
+# Build an image from Dockerfile
+# Command: docker build -t [image name][version/tag] [folder containing Dockerfile]
+% docker build -t my_image1:2.4.4 ../demo_dockerfile/demo1
+STEP 1/3: FROM ubuntu
+STEP 2/3: RUN apt-get -qq update
+--> 37180e2f10f
+STEP 3/3: RUN apt-get install -qqy python3
+debconf: delaying package configuration, since apt-utils is not installed
+...
+Processing triggers for libc-bin (2.31-0ubuntu9.2) ...
+COMMIT my_image1:2.4.4
+--> 997533709c7
+Successfully tagged localhost/my_image1:2.4.4
+997533709c73868ef91b79bbd7a1435ec9ca118a1c8c560b1561f66a5ebcff41
+
+# check if the new image, my_image1, has been created
+% docker image ls -a
+REPOSITORY                TAG         IMAGE ID      CREATED             SIZE
+localhost/my_image1       2.4.4       997533709c73  31 seconds ago  147 MB
+<none>                    <none>      37180e2f10f2  35 seconds ago  107 MB
+docker.io/library/python  3.9-slim    3ba8c1c68e98  26 hours ago        128 MB
+docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago         75.2 MB
+
+# build another image from Dockerfile (using a different way)
+% docker build -t my_image2 ../demo_dockerfile/demo2 
+STEP 1/4: FROM ubuntu
+STEP 2/4: COPY install.sh .
+--> 06c9d473f79
+STEP 3/4: RUN chmod +x ./install.sh
+--> 4bdb422b920
+STEP 4/4: RUN ./install.sh
+debconf: delaying package configuration, since apt-utils is not installed
+...
+Processing triggers for libc-bin (2.31-0ubuntu9.2) ...
+COMMIT my_image2
+--> bc998ddeb66
+Successfully tagged localhost/my_image2:latest
+bc998ddeb66ea287b95321681b90a00c34fd0f57c7a7c304a9924e0312b6ca54
+
+# check if the new image, my_image2, has been created
+% docker image ls -a
+REPOSITORY                TAG         IMAGE ID      CREATED             SIZE
+localhost/my_image2       latest      bc998ddeb66e  About a minute ago  147 MB
+<none>                    <none>      4bdb422b920b  About a minute ago  75.2 MB
+<none>                    <none>      06c9d473f795  About a minute ago  75.2 MB
+localhost/my_image1       2.4.4       997533709c73  2 minutes ago       147 MB
+<none>                    <none>      37180e2f10f2  2 minutes ago       107 MB
+docker.io/library/python  3.9-slim    3ba8c1c68e98  26 hours ago        128 MB
+docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago         75.2 MB
+
+# Test the images (in either batch or interavctive mode)
+% docker run --rm \
+         -v ${PWD}/work_folder_on_host:/work_folder_in_container \
+         -w /work_folder_in_container \
+         my_image1:2.4.4 \
+         python3 print_list.py
+
+% docker run --rm \
+         -v ${PWD}/work_folder_on_host:/work_folder_in_container \
+         -w /work_folder_in_container \
+         my_image2 \
+         python3 print_list.py
+
+# To delete dangling images
+% docker image rm 4bdb422b920b 06c9d473f795 37180e2f10f2
+Deleted: 06c9d473f7952bde658bc37a17f679c6a98c61e4dd8e0f2c0c35f59fb6c51ef7
+
+% docker image ls -a
+REPOSITORY                TAG         IMAGE ID      CREATED         SIZE
+localhost/my_image2       latest      bc998ddeb66e  13 minutes ago  147 MB
+localhost/my_image1       2.4.4       997533709c73  15 minutes ago  147 MB
+docker.io/library/python  3.9-slim    3ba8c1c68e98  26 hours ago    128 MB
+docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago     75.2 MB
 ```
