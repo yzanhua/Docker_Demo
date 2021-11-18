@@ -16,12 +16,10 @@ cd /
 
 # python3 is already installed in gcc:9.4 
 # install pip
-curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3 get-pip.py
-rm get-pip.py
+pip install --upgrade pip
 
 # install mpi4py
-python3 -m pip install mpi4py
+pip install mpi4py
 
 rm -rf /mpich-build
 rm -rf /mpich-3.4.2

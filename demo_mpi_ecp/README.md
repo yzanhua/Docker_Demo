@@ -1,11 +1,16 @@
-# Not Finished
+# DEMO: MPI on ECP using DOCKER
 
-## General
+
+## General Goal
+This demo shows how to set up an image on the ECP machine so that you can run MPI programs on it. Supported mpi programs include c programs and python programs (mpi4py). Note that Fortan is not supported.
+
 [create_image](create_image) contains all the necessary files to setup a docker image
 that one can use to run MPI c/python programs on the ECP machine.
 
 ---
-## Build the Image
+## Setting Up the Image
+You can choose to build such image from scratch, or download a pre-built image from `yzanhua/ecp-mpi`.
+### build the image from scratch
 I have built the image and is avaliable at "yzanhua/ecp-mpi" from Docker Hub. You can also build one using command:
 ```shell
 # Assume the image name you want to build is "my_local_image", version is "latest"
@@ -45,8 +50,12 @@ docker build -t my_local_image:latest path/to/create_image
 2. Create a repository on your Docker Hub. Free account only has one free private repo.
 2. Login the docker account on your local/host machine:
     ```shell
+    # if using docker
     docker login -u [account user name]
     # enter your password
+
+    # if using podman
+    docker login docker.io -u [account user name]
     ```
 3. Push the image you built to the Docker Hub:
     ```shell

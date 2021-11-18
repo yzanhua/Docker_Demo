@@ -1,4 +1,4 @@
-FROM gcc:9.4
+FROM python:3.9
 
 COPY install.sh .
 RUN chmod +x ./install.sh
