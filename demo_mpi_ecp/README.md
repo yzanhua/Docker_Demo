@@ -1,6 +1,10 @@
 # DEMO: MPI on ECP using DOCKER
 ## 1. General Goal
-This demo shows how to set up an image on the ECP machine so that you can run MPI programs on it. Supported mpi programs include c programs and python programs (mpi4py). Note that Fortran is not installed/supported.
+This demo shows how to set up an image on the ECP machine so that you can run MPI programs on it. 
+
+Supported mpi programs include c programs and python programs (mpi4py). Note that Fortran is not installed/supported.
+
+Section 4 also includes how to save/push an image to the Registry.
 
 
 ## 2. Setting Up the Image
@@ -59,7 +63,7 @@ You can find an already-built image from `yzanhua/ecp-mpi`. Python version is `3
     root@a33744391777:/mpich-demo/py# exit
     ```
 
-## Push your image to the Registry (Docker Hub)
+## 4. Push your image to the Registry (Docker Hub)
 
 0. [Official Tutorial](https://docs.docker.com/docker-hub/repos/)
 1. Create an account at [Docker Hub](https://hub.docker.com/)
