@@ -7,7 +7,7 @@ mkdir /mpich
 # build folder
 mkdir /mpich-build
 cd /mpich-build
-/mpich-3.4.2/configure -prefix=/mpich --with-device=ch4:ofi --disable-fortan 2>&1 | tee c.txt
+/mpich-3.4.2/configure -prefix=/mpich --with-device=ch4:ofi --disable-fortran 2>&1 | tee c.txt
 make 2>&1 | tee m.txt
 make install 2>&1 | tee mi.txt 
 echo 'export PATH="/mpich/bin:$PATH"' >> ~/.bashrc
