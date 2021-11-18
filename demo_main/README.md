@@ -189,20 +189,20 @@ CONTAINER ID  IMAGE                            COMMAND     CREATED      STATUS  
 3.  `-w [container_folder]`: the starting working directory once entering the container.
 
 ## Experiment 3
+**Goal1**: run print_list.py in batch mode (i.e. without command-line options `-it`,
+preventing from entering the container in interactive mode)
 
-Goal1: run print_list.py inside container
-
-Goal2: no `-it`
 ```shell
-# # docker run [options] [image name]:[version] [commmand]
-docker run --rm -v $(pwd):/workspace -w /workspace python:3.9 python print_list.py > out2.txt
-
-# # same instruction
-docker run \
-    --rm -v $(pwd):/workspace -w /workspace \ # [options]
-    python:3.9 \ # [image name]:[version]
-    python print_list.py > out2.txt # [command]
-
+# docker run [options] [image name]:[version] [commmand]
+% docker run --rm \
+         -v ${PWD}/work_folder_on_host:/work_folder_in_container \
+         -w /work_folder_in_container \
+         python:3.9 \  # [image name]:[version]
+         python print_list.py > out2.txt  # [run command]
+% ls
+out2.txt  work_folder_on_host
+% cat out2.txt 
+[1, 2, 3, 4]
 ```
 
 ## Experiment 4
