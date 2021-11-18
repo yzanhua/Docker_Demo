@@ -8,7 +8,7 @@ Section 4 also includes how to save/push an image to the Registry.
 
 
 ## 2. Setting Up the Image
-You can choose to build such image from scratch, or download a pre-built image from `yzanhua/ecp-mpi`. The pre-built image is only tested on the ECP machine. 
+You can choose to build such image from scratch, or download a pre-built image from the Docker Hub repo `yzanhua/ecp-mpi`. The pre-built image is only tested on the ECP machine. 
 ### 2.1 Build the image from scratch:
 The folder [Docker_Demo/demo_mpi_ecp/create_image](create_image) contains all the necessary files to build the image. It may take a long time to finish building this image.
 ```shell
