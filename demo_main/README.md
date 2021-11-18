@@ -25,7 +25,8 @@ ba6acccedd2923aee4c2acc6a23780b14ed4b8a5fa4e14e252a23b846df9b6c1
 REPOSITORY                TAG         IMAGE ID      CREATED      SIZE
 docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago  75.2 MB
 
-# Enter docker in the interactive mode to run some commands for testing
+# Create a new container in just-now created image 'ubuntu'
+# Enter the container in the interactive mode and run test commands
 # docker run [options] [image name]:[version] [command]
 # '-i': interactive mode, '-t': Allocate a pseudo-TTY
 % docker run -it ubuntu /bin/bash
@@ -73,6 +74,7 @@ docker.io/library/ubuntu  latest      ba6acccedd29  4 weeks ago  75.2 MB
 CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
 
 # List all containers
+# A container has been created in Experiment 1 when running command 'docker run'
 % docker container ls -a
 CONTAINER ID  IMAGE                            COMMAND     CREATED         STATUS                    PORTS       NAMES
 4a243d8ef5c8  docker.io/library/ubuntu:latest  /bin/bash   11 minutes ago  Exited (0) 9 minutes ago              happy_goldstine
