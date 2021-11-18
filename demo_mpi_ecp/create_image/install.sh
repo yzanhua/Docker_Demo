@@ -11,7 +11,7 @@ cd /mpich-build
 make 2>&1 | tee m.txt
 make install 2>&1 | tee mi.txt 
 echo 'export PATH="/mpich/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
+export PATH="/mpich/bin:$PATH"
 cd /
 
 # python3 is already installed in gcc:9.4 

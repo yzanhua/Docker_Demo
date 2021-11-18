@@ -1,25 +1,27 @@
 # DEMO: MPI on ECP using DOCKER
+## 1. General Goal
+This demo shows how to set up an image on the ECP machine so that you can run MPI programs on it. Supported mpi programs include c programs and python programs (mpi4py). Note that Fortran is not installed/supported.
 
 
-## General Goal
-This demo shows how to set up an image on the ECP machine so that you can run MPI programs on it. Supported mpi programs include c programs and python programs (mpi4py). Note that Fortan is not supported.
-
-[create_image](create_image) contains all the necessary files to setup a docker image
-that one can use to run MPI c/python programs on the ECP machine.
 
 ---
-## Setting Up the Image
+## 2. Setting Up the Image
 You can choose to build such image from scratch, or download a pre-built image from `yzanhua/ecp-mpi`.
-### build the image from scratch
-I have built the image and is avaliable at "yzanhua/ecp-mpi" from Docker Hub. You can also build one using command:
+### 2.1 Build the image from scratch:
+The folder [create_image](create_image) contains all the necessary files to build the image. However, it may take a long time to finish.
 ```shell
 # Assume the image name you want to build is "my_local_image", version is "latest"
 docker build -t my_local_image:latest path/to/create_image
 ```
+### 2.2 Get a pre-built image:
+You can find an already-built image from `yzanhua/ecp-mpi`. Python version is `3.9` and GCC version is `10.2.1`.
+```shell
+docker pull yzanhua/ecp-mpi
+```
 
 ---
 
-## How to use the image:
+## 3. How to use the image:
 1. run a container from the image.
     ```shell
     # if you built your own image
@@ -39,7 +41,7 @@ docker build -t my_local_image:latest path/to/create_image
 
     # python program: mpi4py
     cd /mpich-demo/py
-    mpiexec -n 2 python3 send_rec.py # use python3 instead of python.
+    mpiexec -n 2 python send_rec.py
     ```
 ---
 
