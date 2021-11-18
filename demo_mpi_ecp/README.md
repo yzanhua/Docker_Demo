@@ -23,17 +23,17 @@ You can find an already-built image from `yzanhua/ecp-mpi`. Inside the image, Py
 
 
 ## 3. How to use the image:
-1. run a container from the image.
+1. In the container, MPICH is installed at `/mpich`
+2. In the container, demo programs (c and python) are at `/mpich-demo`
+3. To run demo programs:
     ```shell
-    # if you built your own image
-    % docker run -it --rm my_local_image:latest /bin/bash
+    # now we are on the host machine
+    # first start a container using the image.
+    # if you built your own image 
+    % docker run -it --rm my_local_image /bin/bash
     # if yzanhua/ecp-mpi is used
     % docker run -it --rm yzanhua/ecp-mpi /bin/bash
-    ```
-2. In the container, MPICH is installed at `/mpich`
-3. In the container, demo programs (c and python) are at `/mpich-demo`
-3. In the container, run demo programs:
-    ```shell
+
     # now we are inside the container
     root@a33744391777:/#
 
