@@ -16,7 +16,7 @@ The folder [Docker_Demo/demo_mpi_ecp/create_image](create_image) contains all th
 % docker build -t my_local_image:latest path/to/create_image
 ```
 ### 2.2 Get a pre-built image:
-You can find an already-built image from `yzanhua/ecp-mpi`. Python version is `3.9` and GCC version is `10.2.1`.
+You can find an already-built image from `yzanhua/ecp-mpi`. Inside the image, Python version is `3.9` and GCC version is `10.2.1`.
 ```shell
 % docker pull yzanhua/ecp-mpi
 ```
