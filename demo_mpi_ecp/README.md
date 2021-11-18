@@ -8,15 +8,15 @@ This demo shows how to set up an image on the ECP machine so that you can run MP
 ## 2. Setting Up the Image
 You can choose to build such image from scratch, or download a pre-built image from `yzanhua/ecp-mpi`.
 ### 2.1 Build the image from scratch:
-The folder [create_image](create_image) contains all the necessary files to build the image. However, it may take a long time to finish.
+The folder [Docker_Demo/demo_mpi_ecp/create_image](create_image) contains all the necessary files to build the image. However, it may take a long time to finish.
 ```shell
 # Assume the image name you want to build is "my_local_image", version is "latest"
-docker build -t my_local_image:latest path/to/create_image
+% docker build -t my_local_image:latest path/to/create_image
 ```
 ### 2.2 Get a pre-built image:
 You can find an already-built image from `yzanhua/ecp-mpi`. Python version is `3.9` and GCC version is `10.2.1`.
 ```shell
-docker pull yzanhua/ecp-mpi
+% docker pull yzanhua/ecp-mpi
 ```
 
 ---
@@ -25,23 +25,41 @@ docker pull yzanhua/ecp-mpi
 1. run a container from the image.
     ```shell
     # if you built your own image
-    docker run -it my_local_image:latest /bin/bash
-    # if decide to use yzanhua/ecp-mpi
-    docker run -it yzanhua/ecp-mpi /bin/bash
+    % docker run -it --rm my_local_image:latest /bin/bash
+    # if yzanhua/ecp-mpi is used
+    % docker run -it --rm yzanhua/ecp-mpi /bin/bash
     ```
-2. mpich is installed at `/mpich`
-3. Demo programs (c and python) are at `/mpich-demo`
-3. Run demo programs:
+2. In the container, MPICH is installed at `/mpich`
+3. In the container, demo programs (c and python) are at `/mpich-demo`
+3. In the container, run demo programs:
     ```shell
-    # c program:
-    cd /mpich-demo/c 
-    make # compile c program using mpicc
-    make run # run using 4 process
-    make clean
+    # now we are inside the container
+    root@a33744391777:/#
 
-    # python program: mpi4py
-    cd /mpich-demo/py
-    mpiexec -n 2 python send_rec.py
+    # c program.
+    root@a33744391777:/# cd /mpich-demo/c
+    
+    root@a33744391777:/mpich-demo/c# make
+    mpicc -o hello_world_exec hello_world.c
+    
+    root@a33744391777:/mpich-demo/c# make run
+    mpiexec -n 4 ./hello_world_exec
+    hello world from processor a33744391777, rank 0 out of 4 processors.
+    hello world from processor a33744391777, rank 1 out of 4 processors.
+    hello world from processor a33744391777, rank 2 out of 4 processors.
+    hello world from processor a33744391777, rank 3 out of 4 processors.
+
+    root@a33744391777:/mpich-demo/c# make clean
+    rm -f hello_world_exec
+
+    # python program: using mpi4py
+    root@a33744391777:/mpich-demo/c# cd /mpich-demo/py
+    root@a33744391777:/mpich-demo/py# mpiexec -n 2 python send_rec.py
+    I have rank 0, data is {'a': 7, 'b': 3.14}
+    I have rank 1, data is {'a': 7, 'b': 3.14}
+
+    # exit
+    root@a33744391777:/mpich-demo/py# exit
     ```
 ---
 
@@ -50,14 +68,16 @@ docker pull yzanhua/ecp-mpi
 0. [Official Tutorial](https://docs.docker.com/docker-hub/repos/)
 1. Create an account at [Docker Hub](https://hub.docker.com/)
 2. Create a repository on your Docker Hub. Free account only has one free private repo.
-2. Login the docker account on your local/host machine:
+2. Login the docker account from your local/host machine:
     ```shell
-    # if using docker
-    docker login -u [account user name]
-    # enter your password
+    # if using podman (alias docker=podman)
+    % docker login docker.io
+    # enter username
+    # enter password
 
-    # if using podman
-    docker login docker.io -u [account user name]
+    # if using docker
+    % docker login -u [account user name]
+    # enter your password
     ```
 3. Push the image you built to the Docker Hub:
     ```shell
@@ -67,8 +87,8 @@ docker pull yzanhua/ecp-mpi
     #       repo created on the Docker Hub has name "first_repo_on_cloud"
     
     # first rename "my_local_image":
-    docker tag my_local_image:latest my_account_name/first_repo_on_cloud:latest
+    % docker tag my_local_image:latest my_account_name/first_repo_on_cloud:latest
 
     # push to Docker Hub
-    docker push my_account_name/first_repo_on_cloud:latest
+    % docker push my_account_name/first_repo_on_cloud:latest
     ```
