@@ -1,6 +1,6 @@
 ## Commands to run Python programs in parallel on Cori at NERSC using a Docker Image
 
-* Skip to [Using A Public Docker Image On Cori](#using_a_public_docker_image_on_cori)
+* Skip to [Using A Public Docker Image On Cori](#using-a-public-docker-image-on-cori)
   at the bottom of this page, if you would like to use a pre-built Docker image on Cori.
 
 ### To build a Docker image for running Python on Cori at NERSC
