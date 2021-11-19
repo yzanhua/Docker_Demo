@@ -1,5 +1,5 @@
 EXECS=hello_world_exec
-MPICC?=mpicc
+MPICC=mpicc
 
 all: ${EXECS}
 
