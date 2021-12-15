@@ -1,10 +1,11 @@
 # DEMO: MPI on ECP using DOCKER
 ## 1. General Goal
-This demo shows how to set up an image on the ECP machine so that you can run MPI programs on it. 
-
-Supported mpi programs include c programs and python programs (mpi4py). Note that Fortran is not installed/supported.
-
-Section 4 also includes how to save/push an image to the Registry.
+* This demo shows how to set up an image on host ecp.ece.northwestern.edu so that you can run MPI programs on it.
+* On ecp.ece.northwestern.edu, the installed docker software is actually [podman](https://podman.io/getting-started/).
+  Its command usage is the same as docker. You can create a command alias, e.g. by adding `"alias docker podman"` in your ~/.tcshrc or
+  `"alias docker=podman"` in ~/. bash_profile.
+* In this demo, supported MPI programs include C and python programs (i.e. mpi4py). Note that Fortran is not installed/supported.
+* Section 4 also includes how to save/push an image to the Docker Hub Registry.
 
 
 ## 2. Setting Up the Image
