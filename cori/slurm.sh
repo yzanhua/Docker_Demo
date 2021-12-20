@@ -27,7 +27,8 @@ echo ""
 export OMP_NUM_THREADS=1
 export KMP_AFFINITY=disabled
 
-# $SCRTACH has been mounted as /scratch in the Docker image
+# At line 2 above, the docker image named "wkliao/cori_image:latest" is loaded
+# At line 3 above, Cori's $SCRTACH (/global/cscratch1/sd/wkliao) is mounted as /scratch under the docker image environment.
 
 IN_DIR=/scratch/uboone_in
 IN_FILE=uboone_numu_slice_seq.h5
