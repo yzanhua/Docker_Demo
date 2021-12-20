@@ -2,6 +2,9 @@
 
 * Skip to [Using A Public Docker Image On Cori](#using-a-public-docker-image-on-cori)
   at the bottom of this page, if you would like to use a pre-built Docker image on Cori.
+* Below provides a few simple steps to build, register, download, and use a docker image
+  to run jobs on Cori. For further information, please refer to the
+  [Shifter User guide](https://docs.nersc.gov/development/shifter/how-to-use/) on Cori.
 
 ### To build a Docker image for running Python on Cori at NERSC
 * Use the Dockerfile to build an Image on the local machine.
